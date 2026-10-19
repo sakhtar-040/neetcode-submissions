@@ -1,0 +1,34 @@
+class Solution {
+    public static int shipWithinDays(int[] weights, int days) {
+        int low = 0, high = 0;
+        for (int w : weights) {
+            low = Math.max(low, w);
+            high += w;
+        }
+
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (canShip(weights, days, mid)) {
+                high = mid;      // feasible, try smaller
+            } else {
+                low = mid + 1;   // infeasible, need bigger
+            }
+        }
+        return low;
+    }
+
+    private static boolean canShip(int[] weights, int days, int cap) {
+        int daysUsed = 1;
+        int load = 0;
+
+        for (int w : weights) {
+            if (load + w > cap) {
+                daysUsed++;
+                load = 0;
+            }
+            load += w;
+        }
+
+        return daysUsed <= days;
+    }
+}
